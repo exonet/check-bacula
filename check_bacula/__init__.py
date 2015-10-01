@@ -47,54 +47,37 @@ def main():
     try:
         con = MySQLdb.connect(cfg.get('database', 'hostname'), cfg.get('database', 'username'),
                               cfg.get('database', 'password'), cfg.get('database', 'database'))
-        print con
     except MySQLdb.Error, e:
         print "Error %d: %s" % (e.args[0], e.args[1])
         print "Check %s for correct database credentials." % os.path.join(
             os.path.expanduser("~"), '.check_bacula/config.ini')
         sys.exit(1)
 
-    try:
-        cur = con.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute("""SELECT JobID, Name FROM Job WHERE JobStatus<>'T'
-        AND StartTime > DATE_SUB(NOW(), INTERVAL 1 DAY)
-        AND EndTime > DATE_SUB(NOW(), INTERVAL 1 DAY)""")
-        if cur.rowcount:
-            errorrow = cur.fetchone()
-            while errorrow is not None:
-                print errorrow
-                smtp = smtplib.SMTP('kerio.exonet.nl')
+    cur = con.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("""SELECT JobID, Name FROM Job WHERE JobStatus<>'T'
+    AND StartTime > DATE_SUB(NOW(), INTERVAL 1 DAY)
+    AND EndTime > DATE_SUB(NOW(), INTERVAL 1 DAY)""")
+    if cur.rowcount:
+        errorrow = cur.fetchone()
+        while errorrow is not None:
+            smtp = smtplib.SMTP('kerio.exonet.nl')
 
-                # Send error mail
-                hostname = socket.gethostname()
-                subject = "Bacula job %s (%s) failed on %s" % (
-                    errorrow['JobID'], errorrow['Name'], hostname)
-                msg = ""
+            # Send error mail
+            hostname = socket.gethostname()
+            subject = "Bacula job %s (%s) failed on %s" % (
+                errorrow['JobID'], errorrow['Name'], hostname)
+            msg = ""
 
-                # Get log messages
-                logcur = con.cursor(MySQLdb.cursors.DictCursor)
-                logcur.execute("SELECT Time, LogText FROM Log WHERE JobId=%s", errorrow['JobID'])
-                if logcur.rowcount:
+            # Get log messages
+            logcur = con.cursor(MySQLdb.cursors.DictCursor)
+            logcur.execute("SELECT Time, LogText FROM Log WHERE JobId=%s", errorrow['JobID'])
+            if logcur.rowcount:
+                logrow = logcur.fetchone()
+                while logrow is not None:
+                    msg += "%s: %s" % (logrow['Time'], logrow['LogText'])
                     logrow = logcur.fetchone()
-                    while logrow is not None:
 
-                        msg += "%s: %s" % (logrow['Time'], logrow['LogText'])
-                        print msg
-                        logrow = logcur.fetchone()
-                        print logrow
-                        sys.exit(0)
+            mail = "From: %s\nTo: %s\nSubject: %s\n\n%s" % (fromaddr, to, subject, msg)
 
-
-
-                mail = "From: %s\nTo: %s\nSubject: %s\n\n%s" % (fromaddr, to, subject, msg)
-
-                smtp.sendmail(fromaddr, [to], mail)
-                errorrow = cur.fetchone()
-
-    except MySQLdb.Error, e:
-        print "Error %d: %s" % (e.args[0], e.args[1])
-        sys.exit(1)
-
-    finally:
-        if con:
-            con.close()
+            smtp.sendmail(fromaddr, [to], mail)
+            errorrow = cur.fetchone()

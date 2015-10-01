@@ -15,9 +15,12 @@ def test_00_main():
             patch('MySQLdb.connect') as con, \
             patch('MySQLdb.cursors.DictCursor') as cur, \
             patch('smtplib.SMTP'):
-        cur.side_effect=Exception('allalala')
-        con.cursor.return_value = cur
 
-        con.side_effect=Exception('allalala')
+        con.return_value.cursor.return_value.fetchone.side_effect = [
+            {'JobID': 1, 'Name': 'foo'},
+            {'Time': 1, 'LogText': 'foo'},
+            None
+        ]
         mdb.connect.return_value = con
-        check_bacula.main()
+        with pytest.raises(StopIteration):
+            check_bacula.main()
