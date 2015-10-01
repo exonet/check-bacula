@@ -1,7 +1,7 @@
 import pytest
 import check_bacula
-from mock import patch, Mock
-import MySQLdb
+from mock import patch
+
 
 def test_00_main():
 
@@ -13,7 +13,6 @@ def test_00_main():
 
     with patch('MySQLdb.__init__') as mdb, \
             patch('MySQLdb.connect') as con, \
-            patch('MySQLdb.cursors.DictCursor') as cur, \
             patch('smtplib.SMTP'):
 
         con.return_value.cursor.return_value.fetchone.side_effect = [

@@ -28,8 +28,8 @@ def init(configDir):
         cfg.set('database', 'password', '')
 
         cfg.add_section('mail')
-        cfg.set('mail', 'from', 'bacula@exonet.nl')
-        cfg.set('mail', 'to', 'monitoring@exonet.nl')
+        cfg.set('mail', 'from', '')
+        cfg.set('mail', 'to', '')
 
         with open(os.path.join(configDir, 'config.ini'), 'wb') as fh:
             cfg.write(fh)
