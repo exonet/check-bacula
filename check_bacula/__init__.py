@@ -61,7 +61,7 @@ def main():
     if cur.rowcount:
         errorrow = cur.fetchone()
         while errorrow is not None:
-            smtp = smtplib.SMTP(cfg.get('mail','smtpserver'))
+            smtp = smtplib.SMTP(cfg.get('mail', 'smtpserver'))
 
             # Send error mail.
             hostname = socket.gethostname()
