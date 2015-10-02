@@ -5,12 +5,11 @@ from mock import patch
 
 def test_00_main():
 
-    # Without mocking mysql connection
+    # Without mocking mysql connection.
     with pytest.raises(SystemExit):
         check_bacula.main()
 
-    # With mocking
-
+    # With mocking.
     with patch('MySQLdb.__init__') as mdb, \
             patch('MySQLdb.connect') as con, \
             patch('smtplib.SMTP'):

@@ -13,14 +13,14 @@ def init(configDir):
     if not os.path.isdir(configDir):
         os.mkdir(configDir, 0700)
     else:
-        # Ensure proper permissions
+        # Ensure proper permissions.
         os.chmod(configDir, 0700)
 
     if os.path.isfile(os.path.join(configDir, 'config.ini')):
         cfg.read(os.path.join(configDir, 'config.ini'))
 
     else:
-        # Create a default config.ini
+        # Create a default config.ini.
         cfg.add_section('database')
         cfg.set('database', 'hostname', 'localhost')
         cfg.set('database', 'database', 'bacula')
@@ -28,6 +28,7 @@ def init(configDir):
         cfg.set('database', 'password', '')
 
         cfg.add_section('mail')
+        cfg.set('mail', 'smtpserver', '')
         cfg.set('mail', 'from', '')
         cfg.set('mail', 'to', '')
 
@@ -43,7 +44,7 @@ def main():
     fromaddr = cfg.get('mail', 'from')
     to = cfg.get('mail', 'to')
 
-    # Try creating a database connection
+    # Try creating a database connection.
     try:
         con = MySQLdb.connect(cfg.get('database', 'hostname'), cfg.get('database', 'username'),
                               cfg.get('database', 'password'), cfg.get('database', 'database'))
@@ -60,15 +61,15 @@ def main():
     if cur.rowcount:
         errorrow = cur.fetchone()
         while errorrow is not None:
-            smtp = smtplib.SMTP('kerio.exonet.nl')
+            smtp = smtplib.SMTP(cfg.get('mail','smtpserver'))
 
-            # Send error mail
+            # Send error mail.
             hostname = socket.gethostname()
             subject = "Bacula job %s (%s) failed on %s" % (
                 errorrow['JobID'], errorrow['Name'], hostname)
             msg = ""
 
-            # Get log messages
+            # Get log messages.
             logcur = con.cursor(MySQLdb.cursors.DictCursor)
             logcur.execute("SELECT Time, LogText FROM Log WHERE JobId=%s", errorrow['JobID'])
             if logcur.rowcount:

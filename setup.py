@@ -33,7 +33,7 @@ setup(
     version=version,
     maintainer="Rick van den Hof",
     maintainer_email='r.vandenhof@exonet.nl',
-    url='https://github.com/exonet/check_bacula',
+    url='https://github.com/exonet/check-bacula',
     description='This tool checks the status of the backup jobs on a Bacula server.',
     long_description=README,
     license='License :: OSI Approved :: MIT License',

@@ -4,7 +4,7 @@ import os
 
 
 def test_00_init():
-    # Remove ~/.test dir
+    # Remove ~/.test dir.
     testdir = os.path.join(os.path.expanduser("~"), '.test-check-bacula')
     if os.path.isdir(testdir):
         shutil.rmtree(testdir)
