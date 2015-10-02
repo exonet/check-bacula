@@ -12,7 +12,7 @@ from os.path import abspath, dirname, join
 
 here = abspath(dirname(__file__))
 
-# determine the python version
+# Determine the python version.
 IS_PYPY = hasattr(sys, 'pypy_version_info')
 
 with codecs.open(join(here, 'README.md'), encoding='utf-8') as f:
