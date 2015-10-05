@@ -1,5 +1,5 @@
-.. image:: https://magnum.travis-ci.org/exonet/check-bacula.svg?token=vyAGg52vobHgS7iqrCkg&branch=master
-  :target: https://magnum.travis-ci.org/exonet/check-bacula
+.. image:: https://travis-ci.org/exonet/check-bacula.svg?branch=master
+  :target: https://travis-ci.org/exonet/check-bacula
   :alt: Build Status
 
 .. image:: https://coveralls.io/repos/exonet/check-bacula/badge.svg?branch=master&service=github
