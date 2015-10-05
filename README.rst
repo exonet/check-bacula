@@ -1,5 +1,5 @@
-.. image:: https://magnum.travis-ci.org/asphalt-framework/check-bacula.svg?token=vyAGg52vobHgS7iqrCkg&branch=master
-  :target: https://magnum.travis-ci.org/asphalt-framework/check-bacula
+.. image:: https://magnum.travis-ci.org/exonet/check-bacula.svg?token=vyAGg52vobHgS7iqrCkg&branch=master
+  :target: https://magnum.travis-ci.org/exonet/check-bacula
   :alt: Build Status
 
 
